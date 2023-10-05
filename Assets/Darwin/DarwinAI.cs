@@ -23,16 +23,14 @@ public class DarwinAI : MonoBehaviour
         if(!traits.isLiving())
             Destroy(gameObject);
 
-        float angle;
-        
-        if(timeStamp <= Time.time)
-        {
-            GameObject thing = getClosestObject(triggerArea.darwinsInArea, triggerArea.cookiesInArea);
+        float angle = Random.Range(0.0f, 360.0f); ;
 
-            if (thing == null)
-                angle = Random.Range(0.0f, 360.0f);
-            else
-                angle = getAngle(thing);
+        if (timeStamp <= Time.time)
+        {
+            GameObject closestObject = getClosestObject(triggerArea.darwinsInArea, triggerArea.cookiesInArea);
+
+            if (closestObject != null && !traits.isBored())
+                angle = getAngle(closestObject);
 
             charge(angle + Random.Range(-traits.getDeltaDeviationAngle(), traits.getDeltaDeviationAngle()), traits.getChargeStrength());
             timeStamp = Time.time + traits.getChargeCoolDown();
@@ -44,6 +42,14 @@ public class DarwinAI : MonoBehaviour
         Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
         rigidBody.AddForce(dir * strength);
         traits.setEnergy(traits.getEnergy() - 3);
+
+        // Darwin is done being bored!
+        if (traits.boredom >= traits.boredThreshold * 2)
+            traits.boredom = 0;
+
+        // Increase boredom. This is to ensure that Darwin does not get stuck trying to get an inaccessible cookie
+        // Will be reset when Darwin is done being bored or if it collides into anything.
+        traits.boredom++;
     }
 
     float getAngle(GameObject other)

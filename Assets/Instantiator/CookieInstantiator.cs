@@ -8,8 +8,8 @@ public class CookieInstantiator : MonoBehaviour
 
     void Start()
     {
-        for(int i = 0; i < 75 ; i++)
-            Instantiate(cookie, new Vector3(Random.Range(-18.0f,18.0f), Random.Range(-18.0f, 18.0f), 0), Quaternion.identity);
+        for (int i = 0; i < 75; i++)
+            spawnCookie();
     }
 
     public void spawnCookie()

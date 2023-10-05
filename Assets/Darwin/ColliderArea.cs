@@ -20,7 +20,7 @@ public class ColliderArea : MonoBehaviour
 
         if(random <= darwinHeredity)
             return ((darwinHeredity + otherHeredity) * darwinTrait + otherHeredity * otherTrait) / (darwinHeredity + otherHeredity * 2);
-        if(random <= darwinHeredity + otherHeredity)
+        if(random > darwinHeredity && random <= darwinHeredity + otherHeredity)
             return ((darwinHeredity + otherHeredity) * otherTrait + darwinHeredity * darwinTrait) / (darwinHeredity * 2 + otherHeredity);
 
         return -1;
@@ -30,7 +30,9 @@ public class ColliderArea : MonoBehaviour
     {
         DarwinTraits darwinTraits = gameObject.GetComponent<DarwinTraits>();
         CookieInstantiator cookieScript = cookieInstantiator.GetComponent<CookieInstantiator>();
-        
+
+        darwinTraits.boredom = 0;
+
         if (other.gameObject.CompareTag("Cookie"))
         {
             //Debug.Log("Ate a Cookie!");
@@ -45,7 +47,9 @@ public class ColliderArea : MonoBehaviour
         DarwinTraits otherTraits = other.gameObject.GetComponent<DarwinTraits>();
         DarwinTraits darwinTraits = gameObject.GetComponent<DarwinTraits>();
 
-        if(other.gameObject.CompareTag("Darwin"))
+        darwinTraits.boredom = 0;
+
+        if (other.gameObject.CompareTag("Darwin"))
         {
             if (otherTraits.canBreed() && darwinTraits.canBreed())
             {

@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// TODO: Use C# style getters and setters
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +10,12 @@ public class DarwinTraits : MonoBehaviour
 
     public float chargeCoolDown;
     public float chargeStrength;
+
+    // This is to ensure that Darwin does not get stuck trying to get an inaccessible cookie.
+    // Will be reset when Darwin is done being bored or if it collides into anything.
+    public int boredom { get; set; }
+    // If boredom goes beyond this threshold, Darwin will become bored(wander around aimlessly).
+    public int boredThreshold { get; set; }
 
     public float deltaDeviationAngle;
 
@@ -32,6 +40,8 @@ public class DarwinTraits : MonoBehaviour
         mass = 0;
         chargeCoolDown = 0;
         chargeStrength = 0;
+        boredom = 0;
+        boredThreshold = 5;
         deltaDeviationAngle = 0;
         energy = 0;
         energyPerCharge = 0;
@@ -107,6 +117,13 @@ public class DarwinTraits : MonoBehaviour
     public bool isLiving()
     {
         if(energy > 0)
+            return true;
+        return false;
+    }
+
+    public bool isBored()
+    {
+        if (boredom >= boredThreshold)
             return true;
         return false;
     }
