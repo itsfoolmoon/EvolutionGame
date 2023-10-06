@@ -20,7 +20,7 @@ public class ColliderArea : MonoBehaviour
 
         if(random <= darwinHeredity)
             return ((darwinHeredity + otherHeredity) * darwinTrait + otherHeredity * otherTrait) / (darwinHeredity + otherHeredity * 2);
-        if(random > darwinHeredity && random <= darwinHeredity + otherHeredity)
+        else if(random <= darwinHeredity + otherHeredity)
             return ((darwinHeredity + otherHeredity) * otherTrait + darwinHeredity * darwinTrait) / (darwinHeredity * 2 + otherHeredity);
 
         return -1;
@@ -31,76 +31,109 @@ public class ColliderArea : MonoBehaviour
         DarwinTraits darwinTraits = gameObject.GetComponent<DarwinTraits>();
         CookieInstantiator cookieScript = cookieInstantiator.GetComponent<CookieInstantiator>();
 
-        darwinTraits.boredom = 0;
+        darwinTraits.Boredom = 0;
 
         if (other.gameObject.CompareTag("Cookie"))
         {
             //Debug.Log("Ate a Cookie!");
             Destroy(other.gameObject);
-            darwinTraits.setEnergy(darwinTraits.getEnergy() + 5);
+            darwinTraits.Energy += 5;
             cookieScript.spawnCookie();
         }
     }
 
     void OnCollisionEnter2D(Collision2D other) // Collision(used for other frogs)
     {
-        DarwinTraits otherTraits = other.gameObject.GetComponent<DarwinTraits>();
-        DarwinTraits darwinTraits = gameObject.GetComponent<DarwinTraits>();
+        DarwinTraits otherTraits = other.gameObject.GetComponent<DarwinTraits>(); // parent 1
+        DarwinTraits darwinTraits = gameObject.GetComponent<DarwinTraits>(); // parent 2
 
-        darwinTraits.boredom = 0;
+        darwinTraits.Boredom = 0;
 
         if (other.gameObject.CompareTag("Darwin"))
         {
             if (otherTraits.canBreed() && darwinTraits.canBreed())
             {
-                if (otherTraits.getMass() > darwinTraits.getMass())
+                if (otherTraits.Mass > darwinTraits.Mass)
                 {
-                    DarwinTraits traits = darwin.GetComponent<DarwinTraits>();
+                    GameObject newObject = Instantiate(darwin, other.transform.position, Quaternion.identity);
+                    DarwinTraits traits = newObject.GetComponent<DarwinTraits>(); // what traits the offspring will inherit
 
-                    float traitStat = heredity(darwinTraits.getMassHeredity(), otherTraits.getMassHeredity(), darwinTraits.getMass(), otherTraits.getMassHeredity());
-
-                    if(traitStat == -1)
-                        traits.setMass(Random.Range(0.05f, 0.5f));
-                    else
-                        traits.setMass(traitStat);
-
-                    traits.setMassHeredity(Random.Range(0.0f, 0.5f));
-
-
-                    traitStat = heredity(darwinTraits.getChargeCoolDownHeredity(), otherTraits.getChargeCoolDownHeredity(), darwinTraits.getChargeCoolDown(), otherTraits.getChargeCoolDown());
+                    // Mass
+                    float traitStat = heredity(darwinTraits.MassHeredity, otherTraits.MassHeredity, darwinTraits.Mass, otherTraits.Mass);
 
                     if(traitStat == -1)
-                        traits.setChargeCoolDown(Random.Range(1.0f, 5.0f));
+                        traits.Mass = Random.Range(0.05f, 0.5f);
                     else
-                        traits.setChargeCoolDown(traitStat);
+                        traits.Mass = traitStat;
 
-                    traits.setChargeCoolDownHeredity(Random.Range(0.0f, 0.5f));
+                    traits.MassHeredity = Random.Range(0.0f, 0.5f);
 
-
-                    traitStat = heredity(darwinTraits.getChargeStrengthHeredity(), otherTraits.getChargeStrengthHeredity(), darwinTraits.getChargeStrength(), otherTraits.getChargeStrength());
+                    // ChargeCoolDown
+                    traitStat = heredity(darwinTraits.ChargeCoolDownHeredity, otherTraits.ChargeCoolDownHeredity, darwinTraits.ChargeCoolDown, otherTraits.ChargeCoolDown);
 
                     if(traitStat == -1)
-                        traits.setChargeStrength(Random.Range(100.0f, 200.0f));
+                        traits.ChargeCoolDown = Random.Range(1.0f, 5.0f);
                     else
-                        traits.setChargeStrength(traitStat);
+                        traits.ChargeCoolDown = traitStat;
 
-                    traits.setChargeStrengthHeredity(Random.Range(0.0f, 0.5f));
+                    traits.ChargeCoolDownHeredity = Random.Range(0.0f, 0.5f);
 
-
-                    traitStat = heredity(darwinTraits.getDeltaDeviationAngleHeredity(), otherTraits.getDeltaDeviationAngleHeredity(), darwinTraits.getDeltaDeviationAngle(), otherTraits.getDeltaDeviationAngle());
+                    // ChargeStrength
+                    traitStat = heredity(darwinTraits.ChargeStrengthHeredity, otherTraits.ChargeStrengthHeredity, darwinTraits.ChargeStrength, otherTraits.ChargeStrength);
 
                     if(traitStat == -1)
-                        traits.setDeltaDeviationAngle(Random.Range(0.0f, 15.0f));
+                        traits.ChargeStrength = Random.Range(100.0f, 200.0f);
                     else
-                        traits.setDeltaDeviationAngle(traitStat);
+                        traits.ChargeStrength = traitStat;
 
-                    traits.setDeltaDeviationAngleHeredity(Random.Range(0.0f, 0.5f));
+                    traits.ChargeStrengthHeredity = Random.Range(0.0f, 0.5f);
 
-                    traits.setBreedEnergy(Random.Range(40, 100));
+                    // BoredThreshold
+                    traitStat = heredity(darwinTraits.BoredThresholdHeredity, otherTraits.BoredThresholdHeredity, darwinTraits.BoredThreshold, otherTraits.BoredThreshold);
 
-                    Instantiate(darwin, other.transform.position, other.transform.rotation);
-                    otherTraits.setEnergy(otherTraits.getEnergy() / 2);
-                    darwinTraits.setEnergy(darwinTraits.getEnergy() / 2);
+                    if (traitStat == -1)
+                        traits.BoredThreshold = (byte) Random.Range(3, 6);
+                    else
+                        traits.BoredThreshold = (byte) traitStat;
+
+                    traits.BoredThresholdHeredity = Random.Range(0.0f, 0.5f);
+
+                    // DeltaDeviationAngle
+                    traitStat = heredity(darwinTraits.DeltaDeviationAngleHeredity, otherTraits.DeltaDeviationAngleHeredity, darwinTraits.DeltaDeviationAngle, otherTraits.DeltaDeviationAngle);
+
+                    if(traitStat == -1)
+                        traits.DeltaDeviationAngle = Random.Range(0.0f, 15.0f);
+                    else
+                        traits.DeltaDeviationAngle = traitStat;
+
+                    traits.DeltaDeviationAngleHeredity = Random.Range(0.0f, 0.5f);
+
+                    // EnergyPerCharge
+                    traitStat = heredity(darwinTraits.EnergyPerChargeHeredity, otherTraits.EnergyPerChargeHeredity, darwinTraits.EnergyPerCharge, otherTraits.EnergyPerCharge);
+
+                    if (traitStat == -1)
+                        traits.EnergyPerCharge = (byte) Random.Range(1, 6);
+                    else
+                        traits.EnergyPerCharge = (byte) traitStat;
+
+                    traits.EnergyPerChargeHeredity = Random.Range(0.0f, 0.5f);
+
+                    // BreedEnergy
+                    traitStat = heredity(darwinTraits.BreedEnergyHeredity, otherTraits.BreedEnergyHeredity, darwinTraits.BreedEnergy, otherTraits.BreedEnergy);
+
+                    if (traitStat == -1)
+                        traits.BreedEnergy = (byte) Random.Range(40, 101);
+                    else
+                        traits.BreedEnergy = (byte) traitStat;
+
+                    traits.BreedEnergyHeredity = Random.Range(0.0f, 0.5f);
+
+                    // Energy
+                    traits.Energy = (short) (darwinTraits.Energy / 2 + otherTraits.Energy / 2);
+
+                    // Deplete parents' energy
+                    otherTraits.Energy = (short) (otherTraits.Energy / 2);
+                    darwinTraits.Energy = (short) (darwinTraits.Energy / 2);
                 }
             }
         }

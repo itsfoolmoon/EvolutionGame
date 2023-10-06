@@ -10,28 +10,25 @@ public class DarwinInstantiator : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            DarwinTraits traits = darwin.GetComponent<DarwinTraits>();
+            GameObject newObject = Instantiate(darwin, new Vector3(Random.Range(-10.0f, 10.0f), Random.Range(-10.0f, 10.0f), 0), Quaternion.identity);
+            DarwinTraits traits = newObject.GetComponent<DarwinTraits>();
 
-            //prefab.GetComponent<DarwinTraits>().setMass(Random.Range(0.05f, 1.0f));
-            //prefab.GetComponent<DarwinTraits>().setChargeCoolDown(Random.Range(1.0f, 5.0f));
-            //prefab.GetComponent<DarwinTraits>().setChargeStrength(Random.Range(100.0f, 200.0f));
-            //prefab.GetComponent<DarwinTraits>().setDeltaDeviationAngle(Random.Range(0.0f, 60.0f));
-            //prefab.GetComponent<DarwinTraits>().setBreedEnergy(10);
+            traits.Mass = Random.Range(0.05f, 0.5f);
+            traits.ChargeCoolDown = Random.Range(1.0f, 5.0f);
+            traits.ChargeStrength = Random.Range(100.0f, 200.0f);
+            traits.BoredThreshold = (byte) Random.Range(3, 6);
+            traits.DeltaDeviationAngle = Random.Range(0.0f, 15.0f);
+            traits.EnergyPerCharge = (byte) Random.Range(1.0f, 6.0f);
+            traits.BreedEnergy = (byte) Random.Range(40.0f, 101.0f);
+            traits.Energy = (short) Random.Range(15.0f, 51.0f);
 
-            traits.setMass(Random.Range(0.05f, 0.5f));
-            traits.setChargeCoolDown(Random.Range(1.0f, 5.0f));
-            traits.setChargeStrength(Random.Range(100.0f, 200.0f));
-            traits.setDeltaDeviationAngle(Random.Range(0.0f, 15.0f));
-            traits.setBreedEnergy(Random.Range(40, 100));
-            traits.setEnergy(Random.Range(10, traits.getBreedEnergy()));
-
-            traits.setMassHeredity(Random.Range(0.0f, 0.5f));
-            traits.setChargeCoolDownHeredity(Random.Range(0.0f, 0.5f));
-            traits.setChargeStrengthHeredity(Random.Range(0.0f, 0.5f));
-            traits.setDeltaDeviationAngleHeredity(Random.Range(0.0f, 0.5f));
-            traits.setBreedEnergyHeredity(Random.Range(0.0f, 0.5f));
-            
-            Instantiate(darwin, new Vector3(Random.Range(-10.0f,10.0f), Random.Range(-10.0f, 10.0f), 0), Quaternion.identity);
+            traits.MassHeredity = Random.Range(0.0f, 0.5f);
+            traits.ChargeCoolDownHeredity = Random.Range(0.0f, 0.5f);
+            traits.ChargeStrengthHeredity = Random.Range(0.0f, 0.5f);
+            traits.BoredThresholdHeredity = Random.Range(0.0f, 0.5f);
+            traits.EnergyPerChargeHeredity = Random.Range(0.0f, 0.5f);
+            traits.DeltaDeviationAngleHeredity = Random.Range(0.0f, 0.5f);
+            traits.BreedEnergyHeredity = Random.Range(0.0f, 0.5f);
         }
     }
 }
