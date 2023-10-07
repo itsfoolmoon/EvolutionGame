@@ -82,22 +82,16 @@ public class DarwinTraits : MonoBehaviour
     /* miscellaneous */
     public bool canBreed()
     {
-        if(Energy >= BreedEnergy)
-            return true;
-        return false;
+        return Energy >= BreedEnergy;
     }
 
     public bool isLiving()
     {
-        if(Energy > 0)
-            return true;
-        return false;
+        return Energy > 0;
     }
 
     public bool isBored()
     {
-        if (Boredom >= BoredThreshold)
-            return true;
-        return false;
+        return Boredom >= BoredThreshold;
     }
 }
