@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/**
+This code is applied on the Darwin gameObject. It is used to handle the Darwin's behaviors.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
