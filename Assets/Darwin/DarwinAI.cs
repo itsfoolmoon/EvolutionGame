@@ -38,7 +38,7 @@ public class DarwinAI : MonoBehaviour
 
     void Update()
     {
-        if(traits.Energy <= 0)
+        if(!traits.isLiving())
             Destroy(gameObject);
 
         // The angle in which the Darwin will "lunge" towards
@@ -117,7 +117,6 @@ public class DarwinAI : MonoBehaviour
         // the triggerArea. If Darwin is still hungry, search for more food
         if (darwins.Count == 1)
         {
-            dist = float.MaxValue;
             foreach (GameObject cookie in cookies)
             {
                 // There can be cases where another Darwin eats the cookie that was closest to the current Darwin
