@@ -16,6 +16,7 @@ public class DarwinInstantiator : MonoBehaviour
             traits.Mass = Random.Range(0.05f, 0.5f);
             traits.ChargeCoolDown = Random.Range(1.0f, 5.0f);
             traits.ChargeStrength = Random.Range(100.0f, 200.0f);
+            traits.Boredom = 0;
             traits.BoredThreshold = (byte) Random.Range(3, 6);
             traits.DeltaDeviationAngle = Random.Range(0.0f, 15.0f);
             traits.EnergyPerCharge = (byte) Random.Range(1.0f, 6.0f);
