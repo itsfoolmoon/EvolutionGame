@@ -163,8 +163,11 @@ public class DarwinAI : MonoBehaviour
         }
 
         // Draw a visible line between the current Darwin and the closest game object
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, closestObject.transform.position);
+        if(closestObject != null)
+        {
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, closestObject.transform.position);
+        }
 
 
         return closestObject;
