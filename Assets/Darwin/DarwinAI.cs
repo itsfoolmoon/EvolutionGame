@@ -16,8 +16,9 @@ public class DarwinAI : MonoBehaviour
     // DarwinTraits(a certain script) of the current Darwin
     private DarwinTraits traits;
 
-    // TriggerArea of the current Darwin. It belongs to the Darwin as a chlid
-    private TriggerArea triggerArea;
+    private LineRenderer lineRenderer;
+
+    private SpriteRenderer spriteRenderer;
 
     // Measures the current time. It is used to determine if enough time has passed for the Darwin to "lunge" again
     private float timeStamp = 0.0f;
@@ -30,10 +31,11 @@ public class DarwinAI : MonoBehaviour
         // DarwinTraits(a certain script) of the current Darwin
         traits = gameObject.GetComponent<DarwinTraits>();
 
-        // TriggerArea of the current Darwin. It belongs to the Darwin as a chlid
-        triggerArea = gameObject.GetComponentInChildren<TriggerArea>();
-
         rigidBody.mass = traits.Mass;
+
+        lineRenderer = GetComponent<LineRenderer>();
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -44,13 +46,16 @@ public class DarwinAI : MonoBehaviour
         // The angle in which the Darwin will "lunge" towards
         float angle = Random.Range(0.0f, 360.0f);
 
+        GameObject closestObject = null;
+
+        if (!traits.isBored())
+            closestObject = getClosestObject();
+
         // This if-statement will be true if enough time has passed for the Darwin to be able to "lunge" again
         if (timeStamp <= Time.time)
         {
-            GameObject closestObject = getClosestObject(triggerArea.darwinsInArea, triggerArea.cookiesInArea);
-
             // Set the angle to the direction of the closest gameobject if it exists within the trigger area
-            if (closestObject != null && !traits.isBored())
+            if (closestObject != null)
                 angle = getAngle(closestObject);
 
             // "Lunge" towards the desired angle with some inaccuracy(DeltaDeviationAngle) at a certain strength
@@ -58,6 +63,22 @@ public class DarwinAI : MonoBehaviour
 
             // Put the "lunge" on cooldown
             timeStamp = Time.time + traits.ChargeCoolDown;
+
+            // Decrease energy since Darwin just "lunged!"
+            traits.Energy -= 3;
+
+            // Darwin is done being bored!
+            if (traits.Boredom >= traits.BoredThreshold * 2)
+                traits.Boredom = 0;
+
+            if (traits.isBored())
+                spriteRenderer.color = Color.blue;
+            else
+                spriteRenderer.color = Color.yellow;
+
+            // Increase boredom. This is to ensure that Darwin does not get stuck trying to get an inaccessible cookie
+            // Will be reset when Darwin is done being bored or if it collides into anything other than a wall.
+            traits.Boredom++;
         }
     }
 
@@ -71,17 +92,6 @@ public class DarwinAI : MonoBehaviour
     {
         Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
         rigidBody.AddForce(dir * strength);
-
-        // Decrease energy since Darwin just "lunged!"
-        traits.Energy -= 3;
-
-        // Darwin is done being bored!
-        if (traits.Boredom >= traits.BoredThreshold * 2)
-            traits.Boredom = 0;
-
-        // Increase boredom. This is to ensure that Darwin does not get stuck trying to get an inaccessible cookie
-        // Will be reset when Darwin is done being bored or if it collides into anything other than a wall.
-        traits.Boredom++;
     }
 
     /*
@@ -105,32 +115,19 @@ public class DarwinAI : MonoBehaviour
      * @param darwins: The list of Darwins within the trigger area of the Darwin.
      * @param cookies: The list of cookies within the trigger area of the Darwin.
      */
-    GameObject getClosestObject(List<GameObject> darwins, List<GameObject> cookies)
+    GameObject getClosestObject()
     {
         // This is used to store the closest object from the current Darwin. Can be either a cookie or another Darwin
         GameObject closestObject = null;
 
+        GameObject[] darwins = GameObject.FindGameObjectsWithTag("Darwin");
+        GameObject[] cookies = GameObject.FindGameObjectsWithTag("Cookie");
+
+
         // The distance from the closest object. Set as 10.0f which is the radius of the triggerArea.
         float dist = 10.0f;
 
-        // This if-statement has darwins.Count as 1 as it also counts the current Darwin which is technically within
-        // the triggerArea. If Darwin is still hungry, search for more food
-        if (darwins.Count == 1)
-        {
-            foreach (GameObject cookie in cookies)
-            {
-                // There can be cases where another Darwin eats the cookie that was closest to the current Darwin
-                if(cookie == null)
-                    continue;
-                // If current cookie that is in the list is closer than the previous closest, set the new closest cookie as this.
-                if (Vector3.Distance(cookie.transform.position, transform.position) < dist)
-                {
-                    closestObject = cookie;
-                    dist = Vector3.Distance(closestObject.transform.position, transform.position);
-                }
-            }
-        }
-        else if (traits.canBreed()) // if Darwin has enough energy(food), look for mate to breed with
+        if (traits.canBreed()) // if Darwin has enough energy(food), look for mate to breed with
         {
             foreach (GameObject darwin in darwins)
             {
@@ -142,13 +139,40 @@ public class DarwinAI : MonoBehaviour
                 DarwinTraits otherDarwinTraits = darwin.GetComponent<DarwinTraits>();
 
                 // See if the closest Darwin has enough energy to breed. 
-                if (Vector3.Distance(darwin.transform.position, transform.position) < dist && otherDarwinTraits.canBreed())
+                if (Vector3.Distance(darwin.transform.position, transform.position) < dist && Vector3.Distance(darwin.transform.position, transform.position) < 0 && otherDarwinTraits.canBreed())
                 {
                     closestObject = darwin;
                     dist = Vector3.Distance(closestObject.transform.position, transform.position);
                 }
             }
         }
+        else
+        {
+            foreach (GameObject cookie in cookies)
+            {
+                // There can be cases where another Darwin eats the cookie that was closest to the current Darwin
+                if (cookie == null)
+                    continue;
+                // If current cookie that is in the list is closer than the previous closest, set the new closest cookie as this.
+                if (Vector3.Distance(cookie.transform.position, transform.position) < dist)
+                {
+                    closestObject = cookie;
+                    dist = Vector3.Distance(closestObject.transform.position, transform.position);
+                }
+            }
+        }
+
+        // Draw a visible line between the current Darwin and the closest game object
+        if (closestObject != null && !traits.isBored())
+        {
+            lineRenderer.enabled = true;
+ 
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, closestObject.transform.position);
+        }
+        else
+            lineRenderer.enabled = false;
+
         
         return closestObject;
     }
