@@ -160,7 +160,8 @@ public class DarwinAI : MonoBehaviour
                 }
             }
         }
-        else
+
+        if(closestObject == null)
         {
             foreach (GameObject cookie in cookies)
             {
