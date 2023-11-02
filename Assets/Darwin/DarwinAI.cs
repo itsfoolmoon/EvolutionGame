@@ -46,23 +46,28 @@ public class DarwinAI : MonoBehaviour
         // The angle in which the Darwin will "lunge" towards
         float angle = Random.Range(0.0f, 360.0f);
 
-        GameObject closestObject = getClosestObject();
+        GameObject closestObject = null;
 
         if (!traits.isBored())
         {
-            // closestObject = getClosestObject();
+            lineRenderer.enabled = true;
             spriteRenderer.color = Color.yellow;
+            closestObject = getClosestObject();
+
+            // Draw a visible line between the current Darwin and the closest game object
+            if (closestObject != null)
+            {
+                lineRenderer.SetPosition(0, transform.position);
+                lineRenderer.SetPosition(1, closestObject.transform.position);
+            }
+            else
+                lineRenderer.enabled = false;
         }
         else
         {
             spriteRenderer.color = Color.blue;
-            //lineRenderer.enabled = false;
-        }
-
-        if (closestObject != null)
-            lineRenderer.enabled = true;
-        else
             lineRenderer.enabled = false;
+        }
 
         // This if-statement will be true if enough time has passed for the Darwin to be able to "lunge" again
         if (timeStamp <= Time.time)
@@ -170,14 +175,6 @@ public class DarwinAI : MonoBehaviour
                 }
             }
         }
-
-        // Draw a visible line between the current Darwin and the closest game object
-        if(closestObject != null)
-        {
-            lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, closestObject.transform.position);
-        }
-
 
         return closestObject;
     }
