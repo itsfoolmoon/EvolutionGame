@@ -49,7 +49,20 @@ public class DarwinAI : MonoBehaviour
         GameObject closestObject = null;
 
         if (!traits.isBored())
+        {
             closestObject = getClosestObject();
+            spriteRenderer.color = Color.yellow;
+        }
+        else
+        {
+            spriteRenderer.color = Color.blue;
+            //lineRenderer.enabled = false;
+        }
+
+        if (closestObject != null)
+            lineRenderer.enabled = true;
+        else
+            lineRenderer.enabled = false;
 
         // This if-statement will be true if enough time has passed for the Darwin to be able to "lunge" again
         if (timeStamp <= Time.time)
@@ -57,6 +70,7 @@ public class DarwinAI : MonoBehaviour
             // Set the angle to the direction of the closest gameobject if it exists within the trigger area
             if (closestObject != null)
                 angle = getAngle(closestObject);
+
 
             // "Lunge" towards the desired angle with some inaccuracy(DeltaDeviationAngle) at a certain strength
             charge(angle + Random.Range(-traits.DeltaDeviationAngle, traits.DeltaDeviationAngle), traits.ChargeStrength);
@@ -71,10 +85,14 @@ public class DarwinAI : MonoBehaviour
             if (traits.Boredom >= traits.BoredThreshold * 2)
                 traits.Boredom = 0;
 
-            if (traits.isBored())
-                spriteRenderer.color = Color.blue;
+            /*if (traits.isBored())
+            {
+            }
             else
+            {
                 spriteRenderer.color = Color.yellow;
+                lineRenderer.enabled = true;
+            }*/
 
             // Increase boredom. This is to ensure that Darwin does not get stuck trying to get an inaccessible cookie
             // Will be reset when Darwin is done being bored or if it collides into anything other than a wall.
@@ -139,7 +157,7 @@ public class DarwinAI : MonoBehaviour
                 DarwinTraits otherDarwinTraits = darwin.GetComponent<DarwinTraits>();
 
                 // See if the closest Darwin has enough energy to breed. 
-                if (Vector3.Distance(darwin.transform.position, transform.position) < dist && Vector3.Distance(darwin.transform.position, transform.position) < 0 && otherDarwinTraits.canBreed())
+                if (Vector3.Distance(darwin.transform.position, transform.position) < dist && otherDarwinTraits.canBreed())
                 {
                     closestObject = darwin;
                     dist = Vector3.Distance(closestObject.transform.position, transform.position);
