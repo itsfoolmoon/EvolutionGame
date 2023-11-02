@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 4347508367783809167}
   - component: {fileID: 1982158528563833736}
   - component: {fileID: 1212254730978672508}
-  - component: {fileID: 2500040974700484414}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,19 +111,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &2500040974700484414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 550125040189166244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 343fb4cf32e00c545a6c9eb2a96ac7b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cookie: {fileID: 1091148259283725281, guid: bd64bf0b4b1261f48ab79d32a767187c, type: 3}
 --- !u!1 &4408817914555088800
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,7 +122,7 @@ GameObject:
   - component: {fileID: 3068228286202935390}
   m_Layer: 0
   m_Name: WallObject
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
