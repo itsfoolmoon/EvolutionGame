@@ -46,11 +46,11 @@ public class DarwinAI : MonoBehaviour
         // The angle in which the Darwin will "lunge" towards
         float angle = Random.Range(0.0f, 360.0f);
 
-        GameObject closestObject = null;
+        GameObject closestObject = getClosestObject();
 
         if (!traits.isBored())
         {
-            closestObject = getClosestObject();
+            // closestObject = getClosestObject();
             spriteRenderer.color = Color.yellow;
         }
         else
@@ -84,15 +84,6 @@ public class DarwinAI : MonoBehaviour
             // Darwin is done being bored!
             if (traits.Boredom >= traits.BoredThreshold * 2)
                 traits.Boredom = 0;
-
-            /*if (traits.isBored())
-            {
-            }
-            else
-            {
-                spriteRenderer.color = Color.yellow;
-                lineRenderer.enabled = true;
-            }*/
 
             // Increase boredom. This is to ensure that Darwin does not get stuck trying to get an inaccessible cookie
             // Will be reset when Darwin is done being bored or if it collides into anything other than a wall.
