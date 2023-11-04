@@ -80,11 +80,12 @@ public class ColliderArea : MonoBehaviour
 
         if (other.gameObject.CompareTag("Darwin"))
         {
-            // Hooray! I bumped into another Darwin, task successful, reset boredom.
-            darwinTraits.Boredom = 0;
             // Are criterias met for both of us to breed?
             if (otherTraits.canBreed() && darwinTraits.canBreed())
             {
+                // Hooray! I bumped into another Darwin, task successful, reset boredom.
+                darwinTraits.Boredom = 0;
+
                 GameObject newObject; // The gameobject of the new child that will be birthed.
 
                 // This if statement is a bit arbitrary. To prevent birthing of two children when there should be one,
