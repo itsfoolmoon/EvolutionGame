@@ -53,16 +53,16 @@ public class ColliderArea : MonoBehaviour
         DarwinTraits darwinTraits = gameObject.GetComponent<DarwinTraits>();
         CookieInstantiator cookieScript = cookieInstantiator.GetComponent<CookieInstantiator>();
 
-        // Hooray! I got a cookie, task successful, reset boredom.
-        darwinTraits.Boredom = 0;
-
         if (other.gameObject.CompareTag("Cookie"))
         {
+            // Hooray! I got a cookie, task successful, reset boredom.
+            darwinTraits.Boredom = 0;
             //Debug.Log("Ate a Cookie!");
-            Destroy(other.gameObject);
+            //Destroy(other.gameObject);
+            other.gameObject.transform.position = new Vector3(Random.Range(-18.0f, 18.0f), Random.Range(-18.0f, 18.0f), 0);
             // Increase the Darwin's energy
             darwinTraits.Energy += 5;
-            cookieScript.spawnCookie();
+            //cookieScript.spawnCookie();
         }
     }
 
@@ -78,11 +78,10 @@ public class ColliderArea : MonoBehaviour
         DarwinTraits otherTraits = other.gameObject.GetComponent<DarwinTraits>(); // parent 1's list of traits
         DarwinTraits darwinTraits = gameObject.GetComponent<DarwinTraits>(); // parent 2's list of traits
 
-        // Hooray! I bumped into another Darwin, task successful, reset boredom.
-        darwinTraits.Boredom = 0;
-
         if (other.gameObject.CompareTag("Darwin"))
         {
+            // Hooray! I bumped into another Darwin, task successful, reset boredom.
+            darwinTraits.Boredom = 0;
             // Are criterias met for both of us to breed?
             if (otherTraits.canBreed() && darwinTraits.canBreed())
             {
