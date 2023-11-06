@@ -59,4 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cookie: {fileID: 1091148259283725281, guid: bd64bf0b4b1261f48ab79d32a767187c, type: 3}
-  numCookies: 50
+  cookiesEatenRate: 0
+  cookieSpawnRate: 0
+  nextCookieSpawnTime: 0
+  maxCookies: 75
