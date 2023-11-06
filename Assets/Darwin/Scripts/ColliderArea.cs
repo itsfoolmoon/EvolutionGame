@@ -57,12 +57,16 @@ public class ColliderArea : MonoBehaviour
         {
             // Hooray! I got a cookie, task successful, reset boredom.
             darwinTraits.Boredom = 0;
-            //Debug.Log("Ate a Cookie!");
-            //Destroy(other.gameObject);
-            other.gameObject.transform.position = new Vector3(Random.Range(-18.0f, 18.0f), Random.Range(-18.0f, 18.0f), 0);
+
+            // Just ate a cookie, destroy it!
+            Destroy(other.gameObject);
+
             // Increase the Darwin's energy
             darwinTraits.Energy += 5;
-            //cookieScript.spawnCookie();
+
+            // Spawn new cookie somewhere!
+            StartCoroutine(cookieScript.SpawnCookie());
+            cookieScript.CookiesEaten++;
         }
     }
 
