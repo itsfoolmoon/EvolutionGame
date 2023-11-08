@@ -66,7 +66,6 @@ public class ColliderArea : MonoBehaviour
 
             // Spawn new cookie somewhere!
             StartCoroutine(cookieScript.SpawnCookie());
-            cookieScript.CookiesEaten++;
         }
     }
 
