@@ -20,7 +20,7 @@ public class CookieInstantiator : MonoBehaviour
 
     public IEnumerator SpawnCookie()
     {
-        Debug.Log("SpawnCookie started");
+        //Debug.Log("SpawnCookie started");
         // Get the number of Darwins present on the map
         GameObject[] darwins = GameObject.FindGameObjectsWithTag("Darwin");
         // Find Empty Space one the map
@@ -29,10 +29,10 @@ public class CookieInstantiator : MonoBehaviour
         // Wait for (number of Darwins) seconds
         yield return new WaitForSeconds(darwins.Length);
 
-        Debug.Log("Waited for " + darwins.Length + " seconds");
+        //Debug.Log("Waited for " + darwins.Length + " seconds");
         // Spawn a new cookie at an empty space
         Instantiate(cookie, spawnPosition, Quaternion.identity);
-        Debug.Log("Cookie spawned");
+        //Debug.Log("Cookie spawned");
     }
 
     private Vector3 FindEmptySpace()
