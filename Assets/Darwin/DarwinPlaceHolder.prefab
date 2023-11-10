@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 440880298968602739}
   - component: {fileID: 7360819044179664339}
   - component: {fileID: -3076859452907710059}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DarwinPlaceHolder
   m_TagString: Darwin
   m_Icon: {fileID: 0}
