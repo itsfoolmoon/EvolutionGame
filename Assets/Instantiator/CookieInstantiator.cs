@@ -5,6 +5,8 @@ using UnityEngine;
 public class CookieInstantiator : MonoBehaviour
 {
     public GameObject cookie;
+    public float cookieSpawnRate = 1.0f;
+    public int cookieSpawnTime = 0;
 
     // The maximum amount of cookies to spawn
     public int maxCookies = 75;
@@ -27,7 +29,10 @@ public class CookieInstantiator : MonoBehaviour
         Vector3 spawnPosition = FindEmptySpace();
 
         // Wait for (number of Darwins) seconds
-        yield return new WaitForSeconds(darwins.Length);
+        cookieSpawnTime = darwins.Length;
+        if (cookieSpawnTime < 5)
+            cookieSpawnTime = 0;
+        yield return new WaitForSeconds(cookieSpawnTime);
 
         //Debug.Log("Waited for " + darwins.Length + " seconds");
         // Spawn a new cookie at an empty space
