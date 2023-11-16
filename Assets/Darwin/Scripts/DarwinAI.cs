@@ -137,11 +137,11 @@ public class DarwinAI : MonoBehaviour
         GameObject[] darwins = GameObject.FindGameObjectsWithTag("Darwin");
         GameObject[] cookies = GameObject.FindGameObjectsWithTag("Cookie");
 
-
         // The distance from the closest object. Set as 10.0f which is the radius of the triggerArea.
         float dist = 10.0f;
 
-        if (traits.canBreed()) // if Darwin has enough energy(food), look for mate to breed with
+        // if Darwin has enough energy(food), look for mate to breed with
+        if (traits.canBreed())
         {
             foreach (GameObject darwin in darwins)
             {
@@ -152,31 +152,58 @@ public class DarwinAI : MonoBehaviour
 
                 DarwinTraits otherDarwinTraits = darwin.GetComponent<DarwinTraits>();
 
-                // See if the closest Darwin has enough energy to breed. 
-                if (Vector3.Distance(darwin.transform.position, transform.position) < dist && otherDarwinTraits.canBreed())
+                float distanceToDarwin = Vector2.Distance(darwin.transform.position, transform.position);
+
+                // See if the closest Darwin has enough energy to breed and check if the other Darwin is unobstructed. 
+                if (distanceToDarwin < dist && otherDarwinTraits.canBreed() && !IsObstacleBetween2D(darwin))
                 {
                     closestObject = darwin;
-                    dist = Vector3.Distance(closestObject.transform.position, transform.position);
+                    dist = distanceToDarwin;
                 }
             }
         }
 
-        if(closestObject == null)
+        // If Darwin does not have enough energy to breed or could not find a mate, go find a cookie
+        if (closestObject == null)
         {
             foreach (GameObject cookie in cookies)
             {
                 // There can be cases where another Darwin eats the cookie that was closest to the current Darwin
                 if (cookie == null)
                     continue;
+
+                float distanceToCookie = Vector2.Distance(cookie.transform.position, transform.position);
+
                 // If current cookie that is in the list is closer than the previous closest, set the new closest cookie as this.
-                if (Vector3.Distance(cookie.transform.position, transform.position) < dist)
+                // Check if there is an obstacle between the current Darwin and the closest cookie
+                if (distanceToCookie < dist && !IsObstacleBetween2D(cookie))
                 {
                     closestObject = cookie;
-                    dist = Vector3.Distance(closestObject.transform.position, transform.position);
+                    dist = distanceToCookie;
                 }
             }
         }
 
         return closestObject;
+    }
+
+    /*
+     * This function is responsible for checking to see if the gameObject the darwin is targetting is unobstructed
+     * 
+     * @param targetPosition: The position of the gameObject the Darwin is targetting.
+     * @param cookies: The list of cookies within the trigger area of the Darwin.
+     */
+    bool IsObstacleBetween2D(GameObject targetObject)
+    {
+        // Cast a line from the current Darwin's position to the target position
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, targetObject.transform.position);
+
+        // Check if the line hits something other than the target object
+        if (hit.collider != null && hit.collider.gameObject != targetObject)
+        {
+            return true; // There is an obstacle between the objects
+        }
+
+        return false; // No obstacle between the objects
     }
 }

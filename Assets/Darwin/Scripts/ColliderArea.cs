@@ -57,12 +57,15 @@ public class ColliderArea : MonoBehaviour
         {
             // Hooray! I got a cookie, task successful, reset boredom.
             darwinTraits.Boredom = 0;
-            //Debug.Log("Ate a Cookie!");
-            //Destroy(other.gameObject);
-            other.gameObject.transform.position = new Vector3(Random.Range(-18.0f, 18.0f), Random.Range(-18.0f, 18.0f), 0);
+
+            // Just ate a cookie, destroy it!
+            Destroy(other.gameObject);
+
             // Increase the Darwin's energy
             darwinTraits.Energy += 5;
-            //cookieScript.spawnCookie();
+
+            // Spawn new cookie somewhere!
+            StartCoroutine(cookieScript.SpawnCookie());
         }
     }
 
@@ -80,16 +83,17 @@ public class ColliderArea : MonoBehaviour
 
         if (other.gameObject.CompareTag("Darwin"))
         {
-            // Hooray! I bumped into another Darwin, task successful, reset boredom.
-            darwinTraits.Boredom = 0;
             // Are criterias met for both of us to breed?
             if (otherTraits.canBreed() && darwinTraits.canBreed())
             {
+                // Hooray! I bumped into another Darwin, task successful, reset boredom.
+                darwinTraits.Boredom = 0;
+
                 GameObject newObject; // The gameobject of the new child that will be birthed.
 
                 // This if statement is a bit arbitrary. To prevent birthing of two children when there should be one,
                 // the parent with a higher mass births the child.
-                if (otherTraits.Mass > darwinTraits.Mass)
+                if (otherTraits.Mass > darwinTraits.MassHeredity)
                     newObject = Instantiate(darwin, other.transform.position, Quaternion.identity);
                 else
                     newObject = Instantiate(darwin, transform.position, Quaternion.identity);
@@ -103,12 +107,12 @@ public class ColliderArea : MonoBehaviour
 
                 // Mutation. Create own trait.
                 if (traitStat == -1)
-                    traits.Mass = Random.Range(0.05f, 0.5f);
+                    traits.Mass = Random.Range(0.05f, 1f);
                 else // No mutation. Inherit traits from parents
                     traits.Mass = traitStat;
 
                 // Create chance for mass value of the child to be inherited for its own child
-                traits.MassHeredity = Random.Range(0.0f, 0.5f);
+                traits.MassHeredity = Random.Range(0.325f, 0.5f);
 
 
 
@@ -116,11 +120,11 @@ public class ColliderArea : MonoBehaviour
                 traitStat = heredity(darwinTraits.ChargeCoolDownHeredity, otherTraits.ChargeCoolDownHeredity, darwinTraits.ChargeCoolDown, otherTraits.ChargeCoolDown);
 
                 if(traitStat == -1)
-                    traits.ChargeCoolDown = Random.Range(1.0f, 5.0f);
+                    traits.ChargeCoolDown = Random.Range(0.5f, 10.0f);
                 else
                     traits.ChargeCoolDown = traitStat;
 
-                traits.ChargeCoolDownHeredity = Random.Range(0.0f, 0.5f);
+                traits.ChargeCoolDownHeredity = Random.Range(0.325f, 0.5f);
 
 
 
@@ -132,7 +136,7 @@ public class ColliderArea : MonoBehaviour
                 else
                     traits.ChargeStrength = traitStat;
 
-                traits.ChargeStrengthHeredity = Random.Range(0.0f, 0.5f);
+                traits.ChargeStrengthHeredity = Random.Range(0.325f, 0.5f);
 
 
 
@@ -144,7 +148,7 @@ public class ColliderArea : MonoBehaviour
                 else
                     traits.BoredThreshold = (byte) traitStat;
 
-                traits.BoredThresholdHeredity = Random.Range(0.0f, 0.5f);
+                traits.BoredThresholdHeredity = Random.Range(0.325f, 0.5f);
 
 
 
@@ -152,11 +156,11 @@ public class ColliderArea : MonoBehaviour
                 traitStat = heredity(darwinTraits.DeltaDeviationAngleHeredity, otherTraits.DeltaDeviationAngleHeredity, darwinTraits.DeltaDeviationAngle, otherTraits.DeltaDeviationAngle);
 
                 if(traitStat == -1)
-                    traits.DeltaDeviationAngle = Random.Range(0.0f, 15.0f);
+                    traits.DeltaDeviationAngle = Random.Range(0.0f, 45.0f);
                 else
                     traits.DeltaDeviationAngle = traitStat;
 
-                traits.DeltaDeviationAngleHeredity = Random.Range(0.0f, 0.5f);
+                traits.DeltaDeviationAngleHeredity = Random.Range(0.325f, 0.5f);
 
 
 
@@ -168,7 +172,7 @@ public class ColliderArea : MonoBehaviour
                 else
                     traits.EnergyPerCharge = (byte) traitStat;
 
-                traits.EnergyPerChargeHeredity = Random.Range(0.0f, 0.5f);
+                traits.EnergyPerChargeHeredity = Random.Range(0.325f, 0.5f);
 
 
 
@@ -180,7 +184,7 @@ public class ColliderArea : MonoBehaviour
                 else
                     traits.BreedEnergy = (byte) traitStat;
 
-                traits.BreedEnergyHeredity = Random.Range(0.0f, 0.5f);
+                traits.BreedEnergyHeredity = Random.Range(0.325f, 0.5f);
 
 
 

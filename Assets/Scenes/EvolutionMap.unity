@@ -445,6 +445,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5751553719898123290, guid: a1edcf6d797937947a633797ab0880f6,
+        type: 3}
+      propertyPath: nextCookieSpawnTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8208680482480775524, guid: a1edcf6d797937947a633797ab0880f6,
         type: 3}
       propertyPath: m_RootOrder
@@ -1404,7 +1409,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 21.114895
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1652,7 +1657,7 @@ PrefabInstance:
     - target: {fileID: 3068228286202935390, guid: dba2c969e4e0a0a40a538f5e368be2dd,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 40
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3068228286202935390, guid: dba2c969e4e0a0a40a538f5e368be2dd,
         type: 3}
